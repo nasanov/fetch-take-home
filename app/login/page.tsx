@@ -51,6 +51,7 @@ export default function LoginPage() {
 							onChange={e => setName(e.target.value)}
 							required
 							placeholder="Name"
+							autoComplete="name"
 						/>
 					</div>
 					<div>
@@ -61,6 +62,7 @@ export default function LoginPage() {
 							onChange={e => setEmail(e.target.value)}
 							required
 							placeholder="Email"
+							autoComplete="email"
 						/>
 					</div>
 					<div className="auth-form-footer">
