@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/Pagination.css';
 
 interface PaginationControlsProps {
 	page: number;

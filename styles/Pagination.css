@@ -1,0 +1,27 @@
+.pagination {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	max-width: 64rem;
+	margin-top: 1rem;
+}
+
+.pagination-button {
+	padding: 0.5rem 1rem;
+	border-radius: 0.25rem;
+	cursor: pointer;
+}
+
+.pagination-button-disabled {
+	background-color: #d1d5db;
+}
+
+.pagination-button-enabled {
+	background-color: var(--primary-color);
+	color: white;
+}
+
+.pagination-button-enabled:hover {
+	background-color: var(--primary-color-hover);
+}

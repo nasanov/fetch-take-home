@@ -76,14 +76,16 @@ export default function SearchPage() {
 				setResultsPerPage={setResultsPerPage}
 			/>
 
-			<button onClick={() => fetchDogs()} className="search-button">
-				Search
-			</button>
-			<button onClick={findMatch} className="find-match-button">
-				Find Match
-			</button>
+			<div className="search-buttons-container">
+				<button onClick={() => fetchDogs()} className="search-button">
+					Search
+				</button>
+				<button onClick={findMatch} className="find-match-button">
+					Find Match
+				</button>
+			</div>
 
-			<div className={`dog-grid ${dogs.length > 2 ? 'dog-grid-md' : ''}`}>
+			<div className={`dog-grid`}>
 				{dogs.map(dog => (
 					<Card key={dog.id} dog={dog} />
 				))}
