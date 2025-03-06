@@ -7,92 +7,92 @@ input {
 	flex-direction: column;
 	align-items: center;
 	padding: 1rem;
-  }
+}
 
-  .search-header {
+.search-header {
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
 	max-width: 64rem;
 	margin-bottom: 1rem;
-  }
+}
 
-  .search-title {
+.search-title {
 	font-size: 1.5rem;
 	font-weight: bold;
-  }
+}
 
-  .search-select-container {
+.search-select-container {
 	margin-bottom: 1rem;
-  }
+}
 
-  .search-select-label {
+.search-select-label {
 	display: block;
 	font-size: 1.125rem;
 	font-weight: 500;
-  }
+}
 
-  .search-select {
+.search-select {
 	border: 1px solid #d1d5db;
 	padding: 0.5rem;
-  }
+}
 
-  .search-button {
+.search-button {
 	background-color: #3b82f6;
 	color: white;
 	padding: 0.5rem 1rem;
 	cursor: pointer;
-  }
+}
 
-  .search-button:hover {
+.search-button:hover {
 	background-color: #2563eb;
-  }
+}
 
-  .dog-grid {
+.dog-grid {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	gap: 1rem;
 	margin-top: 1rem;
-  }
+}
 
-  .dog-grid-md {
+.dog-grid-md {
 	grid-template-columns: repeat(5, 1fr);
-  }
+}
 
-  .pagination {
+.pagination {
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
 	max-width: 64rem;
 	margin-top: 1rem;
-  }
+}
 
-  .pagination-button {
+.pagination-button {
 	padding: 0.5rem 1rem;
 	border-radius: 0.25rem;
 	cursor: pointer;
-  }
+}
 
-  .pagination-button-disabled {
+.pagination-button-disabled {
 	background-color: #d1d5db;
-  }
+}
 
-  .pagination-button-enabled {
+.pagination-button-enabled {
 	background-color: #3b82f6;
 	color: white;
-  }
+}
 
-  .pagination-button-enabled:hover {
+.pagination-button-enabled:hover {
 	background-color: #2563eb;
-  }
+}
 
 .search-input {
 	max-width: 150px;
 	border: 1px solid #d1d5db;
- }
+}
 
 
-.age-filters > div {
+.age-filters>div {
 	margin: 10px 0;
 	gap: 20px;
 	display: flex;

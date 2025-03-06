@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import LogoutButton from '@/components/LogoutButton';
 import Card from '@/components/Card';
+import Modal from '@/components/Modal';
 import '../../styles/Search.css';
 import { Dog } from '@/types';
 
@@ -17,6 +18,8 @@ export default function SearchPage() {
 	const [zipCodes, setZipCodes] = useState<string>('');
 	const [ageMin, setAgeMin] = useState<string>('');
 	const [ageMax, setAgeMax] = useState<string>('');
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [matchedDog, setMatchedDog] = useState<Dog | null>(null);
 
 	useEffect(() => {
 		const fetchBreeds = async () => {
@@ -64,9 +67,28 @@ export default function SearchPage() {
 		fetchDogs();
 	}, [fetchDogs]);
 
-	const findMatch = () => {
-		// Mock findMatch function
-		console.log('Finding match...');
+	const findMatch = async () => {
+		try {
+			const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+			const favoriteDogs = dogs.filter(dog => favorites.includes(dog.id));
+			if (favoriteDogs.length === 0) {
+				console.log('No favorite dogs to match.');
+				return;
+			}
+			const { data } = await axios.post(
+				'https://frontend-take-home-service.fetch.com/dogs/match',
+				favoriteDogs.map(dog => dog.id),
+				{
+					withCredentials: true,
+				}
+			);
+			const matchedDogId = data.match;
+			const matchedDog = dogs.find(dog => dog.id === matchedDogId);
+			setMatchedDog(matchedDog || null);
+			setIsModalOpen(true);
+		} catch (error) {
+			console.error('Error finding match:', error);
+		}
 	};
 
 	return (
@@ -177,6 +199,17 @@ export default function SearchPage() {
 					Next
 				</button>
 			</div>
+			<Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+				{matchedDog && (
+					<div className="matched-dog">
+						<h2>Matched Dog</h2>
+						<Card dog={matchedDog} />
+						<button onClick={() => alert('Congrats! You have a new family member!')}>
+							Contact the shelter
+						</button>
+					</div>
+				)}
+			</Modal>
 		</div>
 	);
 }
