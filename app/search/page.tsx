@@ -10,6 +10,7 @@ import { Dog } from '@/types';
 import MatchedDogModal from '@/components/MatchedDogModal';
 import { useFetchBreeds } from '@/hooks/useFetchBreeds';
 import { useFetchDogs } from '@/hooks/useFetchDogs';
+import { haversineDistance } from '@/utils/utils';
 
 export default function SearchPage() {
 	const [selectedBreed, setSelectedBreed] = useState('');
@@ -29,25 +30,12 @@ export default function SearchPage() {
 		fetchDogs();
 	}, [fetchDogs]);
 
-	const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-		// Didn't know about this algorithm, I had to google it https://www.geeksforgeeks.org/haversine-formula-to-find-distance-between-two-points-on-a-sphere/
-		const toRad = (angle: number) => (angle * Math.PI) / 180;
-		const R = 6371; // Radius of the Earth in kilometers
-		const dLat = toRad(lat2 - lat1);
-		const dLon = toRad(lon2 - lon1);
-		const a =
-			Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-			Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-		return R * c; // Distance in kilometers
-	};
-
 	const findMatch = async () => {
 		try {
 			const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 			const favoriteDogs = dogs.filter(dog => favorites.includes(dog.id));
 			if (favoriteDogs.length === 0) {
-				console.log('No favorite dogs to match.');
+				alert('No favorite dogs to match.');
 				return;
 			}
 			const { data } = await axios.post(
@@ -71,7 +59,7 @@ export default function SearchPage() {
 			const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 			const favoriteDogs = dogs.filter(dog => favorites.includes(dog.id));
 			if (favoriteDogs.length === 0) {
-				console.log('No favorite dogs selected.');
+				alert('No favorite dogs selected.');
 				return;
 			}
 			const { data } = await axios.post(
