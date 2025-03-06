@@ -4,14 +4,16 @@ import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import LogoutButton from '@/components/LogoutButton';
 import Card from '@/components/Card';
-import Modal from '@/components/Modal';
+import SearchFilters from '@/components/SearchFilters';
+import PaginationControls from '@/components/PaginationControls';
 import '../../styles/Search.css';
 import { Dog } from '@/types';
+import MatchedDogModal from '@/components/MatchedDogModal';
+import { useFetchBreeds } from '@/hooks/useFetchBreeds';
+import { useFetchDogs } from '@/hooks/useFetchDogs';
 
 export default function SearchPage() {
-	const [breeds, setBreeds] = useState<string[]>([]);
 	const [selectedBreed, setSelectedBreed] = useState('');
-	const [dogs, setDogs] = useState<Dog[]>([]);
 	const [page, setPage] = useState(1);
 	const [sort, setSort] = useState('breed:asc');
 	const [resultsPerPage, setResultsPerPage] = useState(10);
@@ -20,52 +22,19 @@ export default function SearchPage() {
 	const [ageMax, setAgeMax] = useState<string>('');
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [matchedDog, setMatchedDog] = useState<Dog | null>(null);
+	const [hasFavorites, setHasFavorites] = useState(false);
 
-	useEffect(() => {
-		const fetchBreeds = async () => {
-			try {
-				const { data } = await axios.get('https://frontend-take-home-service.fetch.com/dogs/breeds', {
-					withCredentials: true,
-				});
-				setBreeds(data);
-			} catch (error) {
-				console.error('Error fetching breeds:', error);
-			}
-		};
-
-		fetchBreeds();
-	}, []);
-
-	const fetchDogs = useCallback(async () => {
-		try {
-			const res = await axios.get('https://frontend-take-home-service.fetch.com/dogs/search', {
-				params: {
-					breeds: selectedBreed || undefined,
-					zipCodes: zipCodes ? zipCodes.split(',').map(zip => zip.trim()) : undefined,
-					ageMin: ageMin ? parseInt(ageMin) : undefined,
-					ageMax: ageMax ? parseInt(ageMax) : undefined,
-					size: resultsPerPage,
-					from: (page - 1) * resultsPerPage,
-					sort: sort,
-				},
-				withCredentials: true,
-			});
-			const foundDogs = await axios.post(
-				'https://frontend-take-home-service.fetch.com/dogs',
-				res.data.resultIds, // TODO: No more than 100 ids
-				{
-					withCredentials: true,
-				}
-			);
-			setDogs(foundDogs.data);
-		} catch (error) {
-			console.error('Error fetching dogs:', error);
-		}
-	}, [selectedBreed, zipCodes, ageMin, ageMax, page, sort, resultsPerPage]);
+	const { breeds } = useFetchBreeds();
+	const { dogs, fetchDogs } = useFetchDogs(selectedBreed, zipCodes, ageMin, ageMax, page, sort, resultsPerPage);
 
 	useEffect(() => {
 		fetchDogs();
 	}, [fetchDogs]);
+
+	useEffect(() => {
+		const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+		setHasFavorites(favorites.length > 0);
+	}, [dogs]);
 
 	const findMatch = async () => {
 		try {
@@ -98,83 +67,26 @@ export default function SearchPage() {
 				<LogoutButton />
 			</div>
 
-			<div className="search-select-container">
-				<label className="search-select-label">Select a Breed:</label>
-				<select
-					value={selectedBreed}
-					onChange={e => setSelectedBreed(e.target.value)}
-					className="search-select"
-				>
-					<option value="">All Breeds</option>
-					{breeds.map(breed => (
-						<option key={breed} value={breed}>
-							{breed}
-						</option>
-					))}
-				</select>
-
-				<label className="search-select-label">Zip Codes (comma-separated):</label>
-				<input
-					type="text"
-					value={zipCodes}
-					onChange={e => setZipCodes(e.target.value)}
-					className="search-input"
-					placeholder="e.g., 12345, 67890"
-				/>
-
-				<div className="age-filters">
-					<div>
-						<label className="search-select-label">Min Age:</label>
-						<input
-							type="number"
-							value={ageMin}
-							onChange={e => setAgeMin(e.target.value)}
-							className="search-input"
-							min="0"
-						/>
-					</div>
-					<div>
-						<label className="search-select-label">Max Age:</label>
-						<input
-							type="number"
-							value={ageMax}
-							onChange={e => setAgeMax(e.target.value)}
-							className="search-input"
-						/>
-					</div>
-				</div>
-
-				<label className="search-select-label">Sort by:</label>
-				<select value={sort} onChange={e => setSort(e.target.value)} className="search-select">
-					<option value="breed:asc">Breed (A-Z)</option>
-					<option value="breed:desc">Breed (Z-A)</option>
-					<option value="name:asc">Name (A-Z)</option>
-					<option value="name:desc">Name (Z-A)</option>
-					<option value="age:asc">Age (Youngest First)</option>
-					<option value="age:desc">Age (Oldest First)</option>
-				</select>
-
-				<label className="search-select-label">Results per page:</label>
-				<select
-					value={resultsPerPage}
-					onChange={e => {
-						setResultsPerPage(Number(e.target.value));
-						setPage(1); // Reset to first page when changing results per page
-					}}
-					className="search-select"
-				>
-					<option value={10}>10</option>
-					<option value={20}>20</option>
-					<option value={50}>50</option>
-					<option value={100}>100</option>
-				</select>
-			</div>
+			<SearchFilters
+				breeds={breeds}
+				selectedBreed={selectedBreed}
+				setSelectedBreed={setSelectedBreed}
+				zipCodes={zipCodes}
+				setZipCodes={setZipCodes}
+				ageMin={ageMin}
+				setAgeMin={setAgeMin}
+				ageMax={ageMax}
+				setAgeMax={setAgeMax}
+				sort={sort}
+				setSort={setSort}
+				resultsPerPage={resultsPerPage}
+				setResultsPerPage={setResultsPerPage}
+			/>
 
 			<button onClick={() => fetchDogs()} className="search-button">
 				Search
 			</button>
-
-			<button onClick={findMatch} className="find-match-button">
+			<button onClick={findMatch} className="find-match-button" disabled={!hasFavorites}>
 				Find Match
 			</button>
 
@@ -184,32 +96,8 @@ export default function SearchPage() {
 				))}
 			</div>
 
-			<div className="pagination">
-				<button
-					disabled={page === 1}
-					onClick={() => setPage(page - 1)}
-					className={`pagination-button ${
-						page === 1 ? 'pagination-button-disabled' : 'pagination-button-enabled'
-					}`}
-				>
-					Previous
-				</button>
-				<span>Page {page}</span>
-				<button onClick={() => setPage(page + 1)} className="pagination-button pagination-button-enabled">
-					Next
-				</button>
-			</div>
-			<Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-				{matchedDog && (
-					<div className="matched-dog">
-						<h2>Matched Dog</h2>
-						<Card dog={matchedDog} />
-						<button onClick={() => alert('Congrats! You have a new family member!')}>
-							Contact the shelter
-						</button>
-					</div>
-				)}
-			</Modal>
+			<PaginationControls page={page} setPage={setPage} totalPages={Math.ceil(dogs.length / resultsPerPage)} />
+			<MatchedDogModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} matchedDog={matchedDog} />
 		</div>
 	);
 }
