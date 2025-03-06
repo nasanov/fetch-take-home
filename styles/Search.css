@@ -1,0 +1,85 @@
+.search-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 1rem;
+  }
+
+  .search-header {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	max-width: 64rem;
+	margin-bottom: 1rem;
+  }
+
+  .search-title {
+	font-size: 1.5rem;
+	font-weight: bold;
+  }
+
+  .search-select-container {
+	margin-bottom: 1rem;
+  }
+
+  .search-select-label {
+	display: block;
+	font-size: 1.125rem;
+	font-weight: 500;
+  }
+
+  .search-select {
+	border: 1px solid #d1d5db;
+	padding: 0.5rem;
+	border-radius: 0.25rem;
+  }
+
+  .search-button {
+	background-color: #3b82f6;
+	color: white;
+	padding: 0.5rem 1rem;
+	border-radius: 0.25rem;
+	cursor: pointer;
+  }
+
+  .search-button:hover {
+	background-color: #2563eb;
+  }
+
+  .dog-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1rem;
+	margin-top: 1rem;
+  }
+
+  .dog-grid-md {
+	grid-template-columns: repeat(3, 1fr);
+  }
+
+  .pagination {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	max-width: 64rem;
+	margin-top: 1rem;
+  }
+
+  .pagination-button {
+	padding: 0.5rem 1rem;
+	border-radius: 0.25rem;
+	cursor: pointer;
+  }
+
+  .pagination-button-disabled {
+	background-color: #d1d5db;
+  }
+
+  .pagination-button-enabled {
+	background-color: #3b82f6;
+	color: white;
+  }
+
+  .pagination-button-enabled:hover {
+	background-color: #2563eb;
+  }
