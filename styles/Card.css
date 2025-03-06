@@ -2,20 +2,33 @@
 	border: 1px solid #e5e7eb;
 	border-radius: 0.5rem;
 	padding: 0.5rem;
-  }
+}
 
-  .card-image {
+.card-image {
 	width: 100%;
 	height: 10rem;
 	object-fit: cover;
 	border-radius: 0.5rem;
-  }
+}
 
-  .card-title {
+.card-title {
 	font-size: 1.125rem;
 	font-weight: 600;
-  }
+}
 
-  .card-breed {
+.card-breed {
 	color: #4b5563;
-  }
+}
+
+.card-details {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 0.5rem;
+	font-size: 0.875rem;
+	color: #666;
+}
+
+.card-age, .card-zip {
+	margin: 0;
+}

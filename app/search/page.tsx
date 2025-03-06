@@ -5,19 +5,14 @@ import axios from 'axios';
 import LogoutButton from '@/components/LogoutButton';
 import Card from '@/components/Card';
 import '../../styles/Search.css';
-
-interface Dog {
-	id: string;
-	img: string;
-	name: string;
-	breed: string;
-}
+import { Dog } from '@/types';
 
 export default function SearchPage() {
 	const [breeds, setBreeds] = useState<string[]>([]);
 	const [selectedBreed, setSelectedBreed] = useState('');
 	const [dogs, setDogs] = useState<Dog[]>([]);
 	const [page, setPage] = useState(1);
+	const [sort, setSort] = useState('breed:asc');
 
 	useEffect(() => {
 		const fetchBreeds = async () => {
@@ -39,12 +34,17 @@ export default function SearchPage() {
 
 		try {
 			const res = await axios.get('https://frontend-take-home-service.fetch.com/dogs/search', {
-				params: { breeds: selectedBreed, size: 10, from: (page - 1) * 10 },
+				params: {
+					breeds: selectedBreed,
+					size: 10,
+					from: (page - 1) * 10,
+					sort: sort,
+				},
 				withCredentials: true,
 			});
 			const foundDogs = await axios.post(
 				'https://frontend-take-home-service.fetch.com/dogs',
-				res.data.resultIds,
+				res.data.resultIds, // TODO: No more than 100 ids
 				{
 					withCredentials: true,
 				}
@@ -53,7 +53,7 @@ export default function SearchPage() {
 		} catch (error) {
 			console.error('Error fetching dogs:', error);
 		}
-	}, [selectedBreed, page]);
+	}, [selectedBreed, page, sort]);
 
 	useEffect(() => {
 		fetchDogs();
@@ -74,11 +74,22 @@ export default function SearchPage() {
 					className="search-select"
 				>
 					<option value="">All Breeds</option>
+					{/* // TODO_NURS: This doesn't work */}
 					{breeds.map(breed => (
 						<option key={breed} value={breed}>
 							{breed}
 						</option>
 					))}
+				</select>
+
+				<label className="search-select-label">Sort by:</label>
+				<select value={sort} onChange={e => setSort(e.target.value)} className="search-select">
+					<option value="breed:asc">Breed (A-Z)</option>
+					<option value="breed:desc">Breed (Z-A)</option>
+					<option value="name:asc">Name (A-Z)</option>
+					<option value="name:desc">Name (Z-A)</option>
+					<option value="age:asc">Age (Youngest First)</option>
+					<option value="age:desc">Age (Oldest First)</option>
 				</select>
 			</div>
 
