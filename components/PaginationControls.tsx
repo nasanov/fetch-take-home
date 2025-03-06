@@ -3,10 +3,9 @@ import React from 'react';
 interface PaginationControlsProps {
 	page: number;
 	setPage: (page: number) => void;
-	totalPages: number;
 }
 
-const PaginationControls = ({ page, setPage, totalPages }: PaginationControlsProps) => {
+const PaginationControls = ({ page, setPage }: PaginationControlsProps) => {
 	return (
 		<div className="pagination">
 			<button
@@ -19,13 +18,7 @@ const PaginationControls = ({ page, setPage, totalPages }: PaginationControlsPro
 				Previous
 			</button>
 			<span>Page {page}</span>
-			<button
-				disabled={page === totalPages}
-				onClick={() => setPage(page + 1)}
-				className={`pagination-button ${
-					page === totalPages ? 'pagination-button-disabled' : 'pagination-button-enabled'
-				}`}
-			>
+			<button onClick={() => setPage(page + 1)} className={`pagination-button`}>
 				Next
 			</button>
 		</div>

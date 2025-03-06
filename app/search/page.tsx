@@ -22,7 +22,6 @@ export default function SearchPage() {
 	const [ageMax, setAgeMax] = useState<string>('');
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [matchedDog, setMatchedDog] = useState<Dog | null>(null);
-	const [hasFavorites, setHasFavorites] = useState(false);
 
 	const { breeds } = useFetchBreeds();
 	const { dogs, fetchDogs } = useFetchDogs(selectedBreed, zipCodes, ageMin, ageMax, page, sort, resultsPerPage);
@@ -30,11 +29,6 @@ export default function SearchPage() {
 	useEffect(() => {
 		fetchDogs();
 	}, [fetchDogs]);
-
-	useEffect(() => {
-		const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-		setHasFavorites(favorites.length > 0);
-	}, [dogs]);
 
 	const findMatch = async () => {
 		try {
@@ -86,7 +80,7 @@ export default function SearchPage() {
 			<button onClick={() => fetchDogs()} className="search-button">
 				Search
 			</button>
-			<button onClick={findMatch} className="find-match-button" disabled={!hasFavorites}>
+			<button onClick={findMatch} className="find-match-button">
 				Find Match
 			</button>
 
@@ -95,8 +89,7 @@ export default function SearchPage() {
 					<Card key={dog.id} dog={dog} />
 				))}
 			</div>
-
-			<PaginationControls page={page} setPage={setPage} totalPages={Math.ceil(dogs.length / resultsPerPage)} />
+			<PaginationControls page={page} setPage={setPage} />
 			<MatchedDogModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} matchedDog={matchedDog} />
 		</div>
 	);
