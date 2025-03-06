@@ -13,6 +13,7 @@ export default function SearchPage() {
 	const [dogs, setDogs] = useState<Dog[]>([]);
 	const [page, setPage] = useState(1);
 	const [sort, setSort] = useState('breed:asc');
+	const [resultsPerPage, setResultsPerPage] = useState(10);
 
 	useEffect(() => {
 		const fetchBreeds = async () => {
@@ -34,8 +35,8 @@ export default function SearchPage() {
 			const res = await axios.get('https://frontend-take-home-service.fetch.com/dogs/search', {
 				params: {
 					breeds: selectedBreed || undefined,
-					size: 10,
-					from: (page - 1) * 10,
+					size: resultsPerPage,
+					from: (page - 1) * resultsPerPage,
 					sort: sort,
 				},
 				withCredentials: true,
@@ -51,7 +52,7 @@ export default function SearchPage() {
 		} catch (error) {
 			console.error('Error fetching dogs:', error);
 		}
-	}, [selectedBreed, page, sort]);
+	}, [selectedBreed, page, sort, resultsPerPage]);
 
 	useEffect(() => {
 		fetchDogs();
@@ -72,7 +73,6 @@ export default function SearchPage() {
 					className="search-select"
 				>
 					<option value="">All Breeds</option>
-					{/* // TODO_NURS: This doesn't work */}
 					{breeds.map(breed => (
 						<option key={breed} value={breed}>
 							{breed}
@@ -88,6 +88,21 @@ export default function SearchPage() {
 					<option value="name:desc">Name (Z-A)</option>
 					<option value="age:asc">Age (Youngest First)</option>
 					<option value="age:desc">Age (Oldest First)</option>
+				</select>
+
+				<label className="search-select-label">Results per page:</label>
+				<select
+					value={resultsPerPage}
+					onChange={e => {
+						setResultsPerPage(Number(e.target.value));
+						setPage(1); // Reset to first page when changing results per page
+					}}
+					className="search-select"
+				>
+					<option value={10}>10</option>
+					<option value={20}>20</option>
+					<option value={50}>50</option>
+					<option value={100}>100</option>
 				</select>
 			</div>
 
