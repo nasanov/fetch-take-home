@@ -30,7 +30,7 @@ export const useFetchDogs = (
 			});
 			const foundDogs = await axios.post(
 				'https://frontend-take-home-service.fetch.com/dogs',
-				res.data.resultIds, // TODO: No more than 100 ids
+				res.data.resultIds,
 				{
 					withCredentials: true,
 				}

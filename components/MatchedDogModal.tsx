@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from './Modal';
 import { Dog } from '@/types';
 import Image from 'next/image';
+import axios from 'axios';
 
 interface MatchedDogModalProps {
 	isOpen: boolean;
@@ -10,6 +11,25 @@ interface MatchedDogModalProps {
 }
 
 const MatchedDogModal = ({ isOpen, onClose, matchedDog }: MatchedDogModalProps) => {
+	const [location, setLocation] = useState('');
+	const getLocation = async () => {
+		try {
+			const { data } = await axios.post(
+				'https://frontend-take-home-service.fetch.com/locations',
+				[matchedDog?.zip_code],
+				{
+					withCredentials: true,
+				}
+			);
+			setLocation(`${data[0].city}, ${data[0].state}`);
+		} catch (error) {
+			console.error('Error finding closest dog:', error);
+		}
+	};
+
+	useEffect(() => {
+		getLocation();
+	}, [matchedDog]); //eslint-disable-line
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
 			{matchedDog && (
@@ -31,7 +51,7 @@ const MatchedDogModal = ({ isOpen, onClose, matchedDog }: MatchedDogModalProps) 
 						</div>
 						<div className="card-details">
 							<p className="card-age">Age: {matchedDog.age}</p>
-							<p className="card-zip">Zip Code: {matchedDog.zip_code}</p>
+							<p className="card-zip">Location: {location}</p>
 						</div>
 					</div>
 					<button

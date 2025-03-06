@@ -29,6 +29,19 @@ export default function SearchPage() {
 		fetchDogs();
 	}, [fetchDogs]);
 
+	const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+		// Didn't know about this algorithm, I had to google it https://www.geeksforgeeks.org/haversine-formula-to-find-distance-between-two-points-on-a-sphere/
+		const toRad = (angle: number) => (angle * Math.PI) / 180;
+		const R = 6371; // Radius of the Earth in kilometers
+		const dLat = toRad(lat2 - lat1);
+		const dLon = toRad(lon2 - lon1);
+		const a =
+			Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+			Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		return R * c; // Distance in kilometers
+	};
+
 	const findMatch = async () => {
 		try {
 			const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
@@ -50,6 +63,55 @@ export default function SearchPage() {
 			setIsModalOpen(true);
 		} catch (error) {
 			console.error('Error finding match:', error);
+		}
+	};
+
+	const findClosestDogs = async () => {
+		try {
+			const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+			const favoriteDogs = dogs.filter(dog => favorites.includes(dog.id));
+			if (favoriteDogs.length === 0) {
+				console.log('No favorite dogs selected.');
+				return;
+			}
+			const { data } = await axios.post(
+				'https://frontend-take-home-service.fetch.com/locations',
+				favoriteDogs.map(dog => dog.zip_code),
+				{
+					withCredentials: true,
+				}
+			);
+			navigator.geolocation.getCurrentPosition(
+				position => {
+					const userLatitude = position.coords.latitude;
+					const userLongitude = position.coords.longitude;
+
+					let closestDog = null;
+					let minDistance = Infinity;
+
+					data.forEach((location: { latitude: number; longitude: number; zip_code: string }) => {
+						const distance = haversineDistance(
+							userLatitude,
+							userLongitude,
+							location.latitude,
+							location.longitude
+						);
+						if (distance < minDistance) {
+							minDistance = distance;
+							closestDog = favoriteDogs.find(dog => dog.zip_code === location.zip_code);
+						}
+					});
+
+					setMatchedDog(closestDog || null);
+					setIsModalOpen(true);
+					console.log('Closest dog:', closestDog);
+				},
+				error => {
+					console.error('Error getting user location:', error);
+				}
+			);
+		} catch (error) {
+			console.error('Error finding closest dog:', error);
 		}
 	};
 
@@ -82,6 +144,9 @@ export default function SearchPage() {
 				</button>
 				<button onClick={findMatch} className="find-match-button">
 					Find Match
+				</button>
+				<button onClick={findClosestDogs} className="find-match-button">
+					Find closest match
 				</button>
 			</div>
 

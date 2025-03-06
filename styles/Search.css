@@ -48,8 +48,10 @@
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
-	max-width: 300px;
+	max-width: 500px;
 	margin-top: 1rem;
+	flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .search-button {
