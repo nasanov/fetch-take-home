@@ -14,6 +14,9 @@ export default function SearchPage() {
 	const [page, setPage] = useState(1);
 	const [sort, setSort] = useState('breed:asc');
 	const [resultsPerPage, setResultsPerPage] = useState(10);
+	const [zipCodes, setZipCodes] = useState<string>('');
+	const [ageMin, setAgeMin] = useState<string>('');
+	const [ageMax, setAgeMax] = useState<string>('');
 
 	useEffect(() => {
 		const fetchBreeds = async () => {
@@ -35,6 +38,9 @@ export default function SearchPage() {
 			const res = await axios.get('https://frontend-take-home-service.fetch.com/dogs/search', {
 				params: {
 					breeds: selectedBreed || undefined,
+					zipCodes: zipCodes ? zipCodes.split(',').map(zip => zip.trim()) : undefined,
+					ageMin: ageMin ? parseInt(ageMin) : undefined,
+					ageMax: ageMax ? parseInt(ageMax) : undefined,
 					size: resultsPerPage,
 					from: (page - 1) * resultsPerPage,
 					sort: sort,
@@ -52,7 +58,7 @@ export default function SearchPage() {
 		} catch (error) {
 			console.error('Error fetching dogs:', error);
 		}
-	}, [selectedBreed, page, sort, resultsPerPage]);
+	}, [selectedBreed, zipCodes, ageMin, ageMax, page, sort, resultsPerPage]);
 
 	useEffect(() => {
 		fetchDogs();
@@ -79,6 +85,37 @@ export default function SearchPage() {
 						</option>
 					))}
 				</select>
+
+				<label className="search-select-label">Zip Codes (comma-separated):</label>
+				<input
+					type="text"
+					value={zipCodes}
+					onChange={e => setZipCodes(e.target.value)}
+					className="search-input"
+					placeholder="e.g., 12345, 67890"
+				/>
+
+				<div className="age-filters">
+					<div>
+						<label className="search-select-label">Min Age:</label>
+						<input
+							type="number"
+							value={ageMin}
+							onChange={e => setAgeMin(e.target.value)}
+							className="search-input"
+							min="0"
+						/>
+					</div>
+					<div>
+						<label className="search-select-label">Max Age:</label>
+						<input
+							type="number"
+							value={ageMax}
+							onChange={e => setAgeMax(e.target.value)}
+							className="search-input"
+						/>
+					</div>
+				</div>
 
 				<label className="search-select-label">Sort by:</label>
 				<select value={sort} onChange={e => setSort(e.target.value)} className="search-select">

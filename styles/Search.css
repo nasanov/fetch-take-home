@@ -1,3 +1,7 @@
+input {
+	border-radius: 0.25rem;
+}
+
 .search-container {
 	display: flex;
 	flex-direction: column;
@@ -31,14 +35,12 @@
   .search-select {
 	border: 1px solid #d1d5db;
 	padding: 0.5rem;
-	border-radius: 0.25rem;
   }
 
   .search-button {
 	background-color: #3b82f6;
 	color: white;
 	padding: 0.5rem 1rem;
-	border-radius: 0.25rem;
 	cursor: pointer;
   }
 
@@ -83,3 +85,15 @@
   .pagination-button-enabled:hover {
 	background-color: #2563eb;
   }
+
+.search-input {
+	max-width: 150px;
+	border: 1px solid #d1d5db;
+ }
+
+
+.age-filters > div {
+	margin: 10px 0;
+	gap: 20px;
+	display: flex;
+}
