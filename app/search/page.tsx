@@ -30,12 +30,10 @@ export default function SearchPage() {
 	}, []);
 
 	const fetchDogs = useCallback(async () => {
-		if (!selectedBreed) return;
-
 		try {
 			const res = await axios.get('https://frontend-take-home-service.fetch.com/dogs/search', {
 				params: {
-					breeds: selectedBreed,
+					breeds: selectedBreed || undefined,
 					size: 10,
 					from: (page - 1) * 10,
 					sort: sort,
