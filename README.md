@@ -35,6 +35,26 @@ Open http://localhost:3000 with your browser to see the result.
 
 You can find the assessment details [here](https://frontend-take-home.fetch.com/).
 
+## Features implemented
+- Authorization - `/login` route
+  - `Login` form
+  - `Logout` button
+- Search dogs - `/search` route
+- Sorting and Filtering:
+  - Filter by `breed`, `zip_code`, `minAge`, `maxAge`
+  - Sorting by `breed`, `age`, `name`
+- Pagination
+  - Results per page (10, 20, 50, 100)
+- Favorite dogs:
+  - Marking a dog as favorite (storing in local storage)
+  - `Find match` button, makes a call to find a match from the favorite dogs
+  - `Find closest match` button, finds the closed dog from the favorite dogs
+    - I wasn't able to test this in Arc Browser (share location prompt didn't show up, works fine in Google Chrome)
+    - Used `Haversine Distance` algorithm to find the closest location to the location of the current user (didn't know the algorithm, found it [online](https://www.geeksforgeeks.org/haversine-formula-to-find-distance-between-two-points-on-a-sphere/)).
+  - `Found match` modal
+  - Showing `city` and `state` instead of `zip_code` in the `MatchedDogModal`
+
+
 ## File structure
 
 ```
