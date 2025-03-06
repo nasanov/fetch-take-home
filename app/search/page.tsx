@@ -1,6 +1,5 @@
 'use client';
-
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import LogoutButton from '@/components/LogoutButton';
 import Card from '@/components/Card';

@@ -51,3 +51,7 @@
 .heart-button:hover {
 	background-color: #ccc;
 }
+
+.contact-the-shelter-button {
+	margin-top: 0.5rem;
+}
