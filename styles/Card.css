@@ -32,3 +32,23 @@
 .card-age, .card-zip {
 	margin: 0;
 }
+
+.card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.heart-button {
+	background-color: #f9fafbd7;
+	border-radius: 13px;
+	cursor: pointer;
+	font-size: 15px;
+	padding: 11px 12px;
+
+    margin-top: 0.5rem;
+}
+
+.heart-button:hover {
+	background-color: #ccc;
+}

@@ -64,6 +64,11 @@ export default function SearchPage() {
 		fetchDogs();
 	}, [fetchDogs]);
 
+	const findMatch = () => {
+		// Mock findMatch function
+		console.log('Finding match...');
+	};
+
 	return (
 		<div className="search-container">
 			<div className="search-header">
@@ -145,6 +150,10 @@ export default function SearchPage() {
 
 			<button onClick={() => fetchDogs()} className="search-button">
 				Search
+			</button>
+
+			<button onClick={findMatch} className="find-match-button">
+				Find Match
 			</button>
 
 			<div className={`dog-grid ${dogs.length > 2 ? 'dog-grid-md' : ''}`}>
