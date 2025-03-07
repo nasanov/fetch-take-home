@@ -36,12 +36,9 @@ input {
 	color: #333333de;
 	width: 100%;
 	padding: 12px 15px;
-	border: none;
-	outline: none;
 	border-radius: 10px;
-	caret-color: #449eff;
-	transition: background-color 0.3s ease;
 	font-size: 12px;
+
 }
 
 input:focus {

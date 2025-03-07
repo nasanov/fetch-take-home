@@ -50,4 +50,6 @@ input {
 	border-radius: 0.25rem;
 	padding: 0.5rem;
 	font-size: 1rem;
+	caret-color: #449eff;
+	transition: background-color 0.3s ease;
 }
